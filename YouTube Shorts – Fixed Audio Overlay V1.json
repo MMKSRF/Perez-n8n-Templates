@@ -1,0 +1,418 @@
+{
+  "name": "YouTube Shorts – Fixed Audio Overlay V1",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "15be75cb-76aa-4cc6-84b0-554ca68a2953",
+      "name": "Merge Video + Audio",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2256,
+        1728
+      ],
+      "notes": "🧩 Combines the silent video (binary 'video') and the audio (binary 'audio_data') into one item.\nNow the Overlay Audio node can see both binaries."
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "id": "f82a8b50-573e-41cf-9b4b-7ddb83ace3c3",
+      "name": "Schedule3",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        1152,
+        1728
+      ],
+      "notes": "🕘 Triggers every 24 hours. (For testing, change to 'hours' and set value to 24)"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "predictions[0].bytesBase64Encoded",
+        "binaryPropertyName": "image_data",
+        "options": {}
+      },
+      "id": "0a30c3a0-47f1-4032-8313-82f548ad30cd",
+      "name": "Convert to Image File2",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1808,
+        1728
+      ],
+      "notes": "📦 Converts the base64 string to a binary PNG. The binary is now named 'image_data'."
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "sourceImage": {
+          "source": {
+            "sourceType": "binary",
+            "binaryProperty": "image_data"
+          }
+        },
+        "duration": 59,
+        "videoSize": {},
+        "outputFieldName": "video_data"
+      },
+      "id": "2c4a283c-57f1-4f04-9fe7-3fe9289fc12c",
+      "name": "ImageToVideo2",
+      "type": "@sonixnguyen/n8n-nodes-mediafx.mediaFX",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        1728
+      ],
+      "notes": "🎬 Creates a silent 30‑second video from the image. Output binary is named 'video'."
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "15rfdk1EiRiQ6mtP25PKFBXYQmOAYyXqJ",
+          "mode": "id"
+        },
+        "options": {
+          "fileName": "audio_data"
+        }
+      },
+      "id": "66e3b6d9-f721-41b0-a6b5-081f34af458e",
+      "name": "Download Audio2",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1936,
+        2128
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "tSCILAr8y9izoW4c",
+          "name": "Google Drive account"
+        }
+      },
+      "notes": "🎵 Downloads the background MP3 from Google Drive. Binary is saved as 'audio_data'."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://us-central1-aiplatform.googleapis.com/v1/projects/PROJUCT_NAME/locations/us-central1/publishers/google/models/imagen-3.0-generate-001:predict?key=API_KEY",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n{\n  \"instances\": [\n    {\n      \"prompt\": $json.prompt\n    }\n  ],\n  \"parameters\": {\n    \"sampleCount\": 1,\n    \"aspectRatio\": \"9:16\",\n    \"seed\": Number($json.seed),\n    \"addWatermark\": false\n  }\n}\n}}",
+        "options": {}
+      },
+      "id": "246836a1-1f64-414c-a4a0-db453b5d0b4e",
+      "name": "GeminiImage3",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1584,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. THE SPIRITUAL SOUL (Amharic Wisdom)\nconst spiritualQuotes = [\n  { amharic: \"እግዚአብሔር ብርሃኔና መድኃኒቴ ነው፤ የሚያስፈራኝ ማን ነው?\", english: \"The Lord is my light and my salvation; whom shall I fear?\" },\n  { amharic: \"በጸሎት የሚተጋ ሰው አያፍርም።\", english: \"He who perseveres in prayer shall not be ashamed.\" },\n  { amharic: \"ቅዱስ እግዚአብሔር ሆይ፥ ማረን።\", english: \"Holy God, have mercy on us.\" },\n  { amharic: \"ፍቅር ሁሉን ያሸንፋል።\", english: \"Love conquers all.\" },\n  { amharic: \"ትዕግስት የነፍስ መድኃኒት ናት።\", english: \"Patience is the medicine of the soul.\" },\n  { amharic: \"ለእግዚአብሔር የሚሳነው ነገር የለም።\", english: \"Nothing is impossible for God.\" },\n  { amharic: \"ሰማያት የእግዚአብሔርን ክብር ይናገራሉ።\", english: \"The heavens declare the glory of God.\" },\n  { amharic: \"በሰላም እተኛለሁ በሰላምም እነቃለሁ።\", english: \"I will both lie down in peace, and sleep.\" },\n  { amharic: \"ምሕረትህ ከሕይወት ይሻላል።\", english: \"Your loving-kindness is better than life.\" },\n  { amharic: \"እግዚአብሔር ፍቅር ነው።\", english: \"God is love.\" }\n];\n\n// 2. THE VISUAL SCENE\nconst scenes = [\n  \"A lone priest praying in the deep blue shadows of Lalibela rock churches\",\n  \"An elderly monk reading a glowing ancient manuscript under a Baobab tree\",\n  \"Silhouettes of a pilgrimage climbing a misty mountain towards a monastery\",\n  \"A close-up of a hand holding a traditional Ethiopian silver cross\",\n  \"Divine rays of light hitting a church altar filled with incense smoke\",\n  \"A peaceful waterfall in the Simien Mountains with a rainbow mist\",\n  \"Ancient Orthodox murals on a weathered stone ceiling, flickering candlelight\",\n  \"A monk meditating on a cliff edge overlooking a vast Ethiopian canyon\",\n  \"Golden wheat fields under a massive starry night sky in the highlands\",\n  \"A traditional jebena coffee ceremony during a peaceful Sunday morning\"\n];\n\n// 3. THE ARTISTIC VIBE\nconst styles = [\n  \"Cinematic 9:16, 8k, Unreal Engine 5 style, hyper-realistic\",\n  \"Ethereal oil painting, soft brushstrokes, golden hour glow\",\n  \"Vintage 35mm film photography, grainy, moody, National Geographic style\",\n  \"Magical realism, floating embers, divine lighting, sharp focus\",\n  \"Ancient parchment texture, warm sepia tones, spiritual atmosphere\"\n];\n\n// --- GENERATION LOGIC ---\nconst quote = spiritualQuotes[Math.floor(Math.random() * spiritualQuotes.length)];\nconst scene = scenes[Math.floor(Math.random() * scenes.length)];\nconst style = styles[Math.floor(Math.random() * styles.length)];\n\n// Random Seed\nconst seed = Math.floor(Math.random() * 1000000000).toString();\n\n// TEXT OVERLAY INSTRUCTION\n// We tell the AI to include the text as a centered, elegant glowing caption.\nconst textInstruction = `The image must feature the following Amharic text centered at the bottom in an elegant, glowing golden Ge'ez font: \"${quote.amharic}\"`;\n\nreturn [{\n  json: {\n    prompt: `${scene}, ${style}, deeply spiritual. ${textInstruction}`,\n    amharic_text: quote.amharic,\n    english_translation: quote.english,\n    seed: seed\n  }\n}];"
+      },
+      "id": "5d8f9991-13db-4e23-8701-8a759c2a7b64",
+      "name": "Randomizer3",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        1584
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "mixAudio",
+        "mixVideoSourceType": "binary",
+        "mixVideoSourceBinary": "video_data",
+        "mixAudioSourceType": "binary"
+      },
+      "id": "4ceb0992-fe65-40d6-aded-4ed1e10e614a",
+      "name": "Overlay Audio3",
+      "type": "@sonixnguyen/n8n-nodes-mediafx.mediaFX",
+      "typeVersion": 1,
+      "position": [
+        2592,
+        1776
+      ],
+      "notes": "🔊 Mixes the MP3 into the video. The final video is stored as binary 'final_video'."
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5a7ffa7f-e903-490c-a540-353e00a01b62",
+      "name": "Google Gemini Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1744,
+        1568
+      ],
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xkNPNJDsA9joX7l7",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"discription\": \"This is song is about to transoferm my life form here to there by ..... \",\n\t\"tilte\": [\"deep Prayer song | life changeing   \"]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1888,
+        1568
+      ],
+      "id": "7f3a4a50-5be4-4b12-a203-d1897c795357",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Act as an expert Ethiopian content creator. Based on this scene: \"{{ $json.prompt }}\" and this sacred text: \"{{ $json.amharic_text }}\", generate a high-engagement social media title and a description.\n\nREQUIREMENTS:\n1. The Title must be in English but include a powerful spiritual emoji.\n2. The Description must START with the Amharic text: \"{{ $json.amharic_text }}\".\n3. Follow the Amharic with 2 sentences in English explaining the spiritual vibe and adding viral hashtags like #EthiopianOrthodox #Spiritual #Lalibela.\n\nYou must return the result as a JSON object exactly like this:\n{\n  \"title\": \"Title here\",\n  \"description\": \"Amharic text + English explanation + hashtags\"\n}",
+        "hasOutputParser": true
+      },
+      "id": "a8307de0-2f96-4bec-a6dc-b96d083d1d1e",
+      "name": "Basic LLM Chain3",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1696,
+        1312
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "1682814b-d3f8-4e47-ac9f-209be6308121",
+      "name": "Final Content Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2960,
+        1680
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $json.output.tilte[0] }}",
+        "regionCode": "ET",
+        "categoryId": "24",
+        "options": {
+          "description": "={{ $json.output.discription }}",
+          "privacyStatus": "public"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        3216,
+        1728
+      ],
+      "id": "eadd4e53-fc41-4f7e-9f30-300b516b49f9",
+      "name": "Upload a video",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "bAKhFNZPVNDu7zOf",
+          "name": "YouTube account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Merge Video + Audio": {
+      "main": [
+        [
+          {
+            "node": "Overlay Audio3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule3": {
+      "main": [
+        [
+          {
+            "node": "Randomizer3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download Audio2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Image File2": {
+      "main": [
+        [
+          {
+            "node": "ImageToVideo2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ImageToVideo2": {
+      "main": [
+        [
+          {
+            "node": "Merge Video + Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Audio2": {
+      "main": [
+        [
+          {
+            "node": "Merge Video + Audio",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "GeminiImage3": {
+      "main": [
+        [
+          {
+            "node": "Convert to Image File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Randomizer3": {
+      "main": [
+        [
+          {
+            "node": "GeminiImage3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain3",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain3": {
+      "main": [
+        [
+          {
+            "node": "Final Content Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Overlay Audio3": {
+      "main": [
+        [
+          {
+            "node": "Final Content Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Final Content Merge": {
+      "main": [
+        [
+          {
+            "node": "Upload a video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "18419c29-d711-4b56-84b0-7eab80365ac4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "17536823b5796b02a21adc37d8910a77974489978e9923735ef3863f29407aac"
+  },
+  "id": "7D1mW16gweXeNryV",
+  "tags": [
+    {
+      "updatedAt": "2026-05-10T09:39:09.377Z",
+      "createdAt": "2026-05-10T09:39:09.377Z",
+      "id": "70UGRGYJWPp0uYoj",
+      "name": "V1 YTshort"
+    }
+  ]
+}
