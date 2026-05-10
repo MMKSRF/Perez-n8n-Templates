@@ -1,88 +1,296 @@
-```python
-markdown_content = """# 🇪🇹 Ethio-Cinematic AI Video Factory
+# 🇪🇹 Ethio-Cinematic AI Video Factory
 
-An automated n8n workflow that generates spiritual, high-quality cinematic videos of Ethiopia. This system uses **Imagen 3 (Vertex AI)** for visuals, **Gemini 1.5 Flash** for metadata, and **MediaFX** for video production, triggered directly by your voice via **Telegram**.
+An automated **n8n workflow** that generates spiritual, cinematic videos of Ethiopia using AI.
 
-## ✨ Features
-* **On-Demand Creation:** Trigger video generation by sending a voice message or audio file to your private Telegram bot.
-* **Dynamic Video Length:** The generated video length automatically matches the duration of your audio message.
-* **Deep Variety:** Over 500+ random combinations of Ethiopian spiritual themes, artistic styles, and sacred Ge'ez quotes.
-* **Authentic Ge'ez Support:** Automatically integrates Amharic text into YouTube titles and descriptions.
-* **9:16 Optimized:** Perfectly formatted for YouTube Shorts and TikTok.
+This system combines:
 
-## 🚀 How It Works
-1.  **Telegram Trigger:** You send an audio message. n8n calculates the duration.
-2.  **Randomizer (JS):** Selects a spiritual theme, a visual scene, and a random Amharic quote.
-3.  **Visual Engine (Vertex AI):** **Imagen 3** generates a hyper-realistic 9:16 image.
-4.  **Metadata Engine (Gemini):** Creates a viral YouTube Title and a dual-language (Amharic/English) description.
-5.  **Production (MediaFX):** Concatentates the image and audio into a final video matching your audio length.
-6.  **Distribution (YouTube):** Automatically uploads the video to your channel.
+- **Imagen 3 (Vertex AI)** → image generation
+- **Gemini 1.5 Flash** → YouTube metadata generation
+- **MediaFX** → video production
+- **Telegram Bot** → voice-triggered automation
 
-## 🛠 Setup & APIs
-To run this workflow, you will need the following API credentials:
+---
 
-### 1. Google Cloud Platform
-* **Vertex AI API:** For image generation.
-* **YouTube Data API v3:** For video uploads.
-* **Credentials:** Create an **OAuth 2.0 Client ID**.
-    * *Where to get it:* [Google Cloud Console](https://console.cloud.google.com/)
+# ✨ Features
 
-### 2. Telegram
-* **Telegram Bot Token:** To send your audio triggers.
-    * *Where to get it:* [@BotFather](https://t.me/botfather)
+- 🎙 **Voice-Triggered Workflow**  
+  Generate videos instantly by sending a voice message or audio file to your private Telegram bot.
 
-### 3. n8n
-* **MediaFX Node:** Requires the `@sonixnguyen/n8n-nodes-mediafx` community node installed in your n8n instance.
+- ⏱ **Dynamic Video Length**  
+  The final video duration automatically matches the length of the uploaded audio.
 
-## 📦 Installation
-1.  Copy the `workflow.json` code from this repository.
-2.  In n8n, create a new workflow and press **CTRL+V** to paste the nodes.
-3.  Configure your credentials for:
-    * Google YouTube OAuth2
-    * Google Vertex AI (Service Account or OAuth)
-    * Telegram Bot API
+- 🎨 **500+ Randomized Combinations**  
+  Creates unique cinematic outputs using Ethiopian spiritual themes, visual styles, and sacred Ge'ez quotes.
 
-## 📝 The "Brain" (JavaScript Node)
-The core logic resides in the `Randomizer` node. It ensures your prompts are diverse and spiritually resonant:
+- 🇪🇹 **Authentic Ge'ez & Amharic Support**  
+  Automatically includes Amharic text in YouTube titles and descriptions.
+
+- 📱 **Vertical 9:16 Format**  
+  Optimized for:
+  - YouTube Shorts
+  - TikTok
+  - Instagram Reels
+
+---
+
+# 🚀 Workflow Overview
+
+```text
+Telegram Audio Trigger
+        ↓
+Randomizer (JavaScript)
+        ↓
+Imagen 3 (Vertex AI)
+        ↓
+Gemini 1.5 Flash
+        ↓
+MediaFX Video Composer
+        ↓
+YouTube Upload
+```
+
+## Step-by-Step Process
+
+### 1. Telegram Trigger
+You send an audio message to your Telegram bot.
+
+n8n:
+- downloads the audio
+- calculates the duration
+- passes it through the workflow
+
+---
+
+### 2. Randomizer (JavaScript Node)
+
+The workflow randomly selects:
+- a spiritual Ethiopian theme
+- a cinematic scene
+- an Amharic quote
+- a unique generation seed
+
+This ensures every generated video feels different and authentic.
+
+---
+
+### 3. Visual Generation — Imagen 3 (Vertex AI)
+
+**Imagen 3** generates a hyper-realistic cinematic image in **9:16 format**.
+
+Example scene prompt:
+
+```text
+A lone Ethiopian priest praying inside the deep blue shadows
+of the Lalibela rock-hewn churches, cinematic lighting,
+ultra realistic, spiritual atmosphere, 9:16
+```
+
+---
+
+### 4. Metadata Generation — Gemini 1.5 Flash
+
+Gemini automatically creates:
+- viral YouTube titles
+- bilingual descriptions (Amharic + English)
+- hashtags and SEO metadata
+
+Example output:
+
+```text
+🕯️ የላሊበላ መንፈሳዊ ምሽት | Spiritual Ethiopia ✨
+```
+
+---
+
+### 5. Video Production — MediaFX
+
+MediaFX:
+- combines the generated image and audio
+- creates a cinematic vertical video
+- exports the final file
+
+The final video duration exactly matches the original audio length.
+
+---
+
+### 6. YouTube Distribution
+
+The workflow automatically uploads the completed video to your YouTube channel.
+
+---
+
+# 🛠 Requirements
+
+## 1. Google Cloud Platform
+
+Enable the following APIs:
+
+- Vertex AI API
+- YouTube Data API v3
+
+### Required Credentials
+
+Create:
+- **OAuth 2.0 Client ID**
+- or a **Service Account**
+
+Google Cloud Console:
+
+https://console.cloud.google.com/
+
+---
+
+## 2. Telegram
+
+Create a Telegram bot using **BotFather**.
+
+BotFather:
+
+https://t.me/botfather
+
+You will receive:
+- Bot Token
+- API access for Telegram triggers
+
+---
+
+## 3. n8n
+
+Install the MediaFX community node:
+
+```bash
+npm install @sonixnguyen/n8n-nodes-mediafx
+```
+
+---
+
+# 📦 Installation
+
+## 1. Export the Workflow
+
+Copy the `workflow.json` file from this repository.
+
+---
+
+## 2. Import into n8n
+
+Inside n8n:
+
+- Create a new workflow
+- Press:
+
+```text
+CTRL + V
+```
+
+to paste the workflow nodes directly.
+
+---
+
+## 3. Configure Credentials
+
+Add credentials for:
+
+- Google YouTube OAuth2
+- Google Vertex AI
+- Telegram Bot API
+
+---
+
+# 🧠 Core Logic — Randomizer Node
 
 ```javascript
 const spiritualQuotes = [
-  { amharic: "እግዚአብሔር ብርሃኔና መድኃኒቴ ነው፤ የሚያስፈራኝ ማን ነው?", english: "The Lord is my light and my salvation" },
-  // ... 100+ more quotes
+  {
+    amharic: "እግዚአብሔር ብርሃኔና መድኃኒቴ ነው፤ የሚያስፈራኝ ማን ነው?",
+    english: "The Lord is my light and my salvation"
+  },
+  // ...100+ more quotes
 ];
 
 const scenes = [
   "A lone priest praying in the deep blue shadows of Lalibela rock churches",
-  // ... 100+ more scenes
+  // ...100+ more scenes
 ];
 
-// Logic picks random elements and a unique seed for every run
+// Random selection logic
+const selectedQuote =
+  spiritualQuotes[Math.floor(Math.random() * spiritualQuotes.length)];
 
+const selectedScene =
+  scenes[Math.floor(Math.random() * scenes.length)];
 ```
-
-## ⚠️ Important Note on JSON Errors
-
-If you encounter a `Bad Request` or `Invalid JSON` error in the Gemini/Vertex nodes, ensure your prompt expressions are wrapped correctly to escape Amharic characters:
-`{{ { "prompt": $json.prompt } }}`
 
 ---
 
-*Created with ❤️ for the Ethiopian Creative Community.*
-"""
+# ⚠️ Common JSON Error Fix
 
-with open("README.md", "w", encoding="utf-8") as f:
-f.write(markdown_content)
+If you encounter errors such as:
 
+```text
+Bad Request
+Invalid JSON
 ```
-Your README.md file is ready for GitHub.
 
-[file-tag: code-generated-file-0-1778407012250269389]
+inside Gemini or Vertex AI nodes, ensure your expressions are wrapped properly.
 
-I have organized this file specifically for your project. It includes:
-* **The "Audio-Driven" logic:** Mentioning how the Telegram voice message sets the video duration.
-* **API Guide:** Exactly which Google APIs to enable (Vertex and YouTube).
-* **A "Pro-Tip" section:** Explaining how to avoid those JSON "Bad Request" errors we fixed with the escaped expressions.
+## ✅ Correct Format
 
-You can now upload this to your repository along with your exported n8n JSON file!
-
+```javascript
+{{ { "prompt": $json.prompt } }}
 ```
+
+This prevents issues with:
+- escaped characters
+- Amharic text
+- malformed JSON payloads
+
+---
+
+# 📁 Recommended Repository Structure
+
+```text
+ethio-cinematic-ai/
+│
+├── README.md
+├── workflow.json
+├── assets/
+│   ├── examples/
+│   └── thumbnails/
+│
+└── prompts/
+    ├── quotes.json
+    └── scenes.json
+```
+
+---
+
+# 🔥 Future Improvements
+
+- Multi-image cinematic transitions
+- AI-generated Ethiopian ambient music
+- Automatic subtitle generation
+- TikTok auto-upload support
+- Multi-language support
+- AI voice narration
+
+---
+
+# ❤️ Credits
+
+Created for the Ethiopian creative and AI community.
+
+Built with:
+- n8n
+- Vertex AI
+- Gemini
+- Telegram
+- MediaFX
+
+---
+
+## 📜 License
+
+MIT License
+
+Feel free to fork, modify, and build upon this project.
